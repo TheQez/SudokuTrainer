@@ -1,13 +1,14 @@
 import tkinter as tk
 import tkinter.font as font
 
-
-
 class SudokuGrid:
+    def __init__(self, initState=[[' ' for i in range(0, 9)]for j in range(0, 9)]):
+        self.entries = initState
+        self.isInLargeMode = [[True for i in range(0, 9)] for j in range(0, 9)]
+
+class SudokuUI:
     selectedCell = (None, None)
-    isInLargeMode = [[True for i in range(0, 9)] for j in range(0, 9)]
     labels = [[0 for i in range(0, 9)] for j in range(0, 9)]
-    entries = [[' ' for i in range(0, 9)] for j in range(0, 9)]
     mainNumberFont = None
     smallNumberFont = None
 
@@ -15,6 +16,8 @@ class SudokuGrid:
     def __init__(self, window):
         # TODO: Have a real init function
         self.window = window
+
+        self.sudoku = SudokuGrid()
 
         window.bind('<KeyPress>', self.onKeyPress)
 
@@ -33,19 +36,19 @@ class SudokuGrid:
     def onKeyPress(self, event):
         if event.char.isdigit() and event.char != '0':
             if self.currentMode == 'LARGE':
-                self.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = True
-                if self.entries[self.selectedCell[0]][self.selectedCell[1]] == event.char:
-                    self.entries[self.selectedCell[0]][self.selectedCell[1]] = None
+                self.sudoku.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = True
+                if self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] == event.char:
+                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] = None
                 else:
-                    self.entries[self.selectedCell[0]][self.selectedCell[1]] = event.char
+                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] = event.char
             else:
-                self.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = False
-                if type(self.entries[self.selectedCell[0]][self.selectedCell[1]]) is not list:
-                    self.entries[self.selectedCell[0]][self.selectedCell[1]] = []
-                if int(event.char) not in self.entries[self.selectedCell[0]][self.selectedCell[1]]:
-                    self.entries[self.selectedCell[0]][self.selectedCell[1]].append(int(event.char))
+                self.sudoku.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = False
+                if type(self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]]) is not list:
+                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] = []
+                if int(event.char) not in self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]]:
+                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]].append(int(event.char))
                 else:
-                    self.entries[self.selectedCell[0]][self.selectedCell[1]].remove(int(event.char))
+                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]].remove(int(event.char))
 
         if event.char == ' ':
             if self.currentMode == 'LARGE':
@@ -101,8 +104,6 @@ class SudokuGrid:
         return miniGrid
 
     def update(self):
-        # TODO: Unify both types of labels into one, then overwriting isnt a problem
-
         for child in self.window.winfo_children():
             child.destroy()
 
@@ -115,8 +116,8 @@ class SudokuGrid:
                         smallGrid = tk.Frame(master=mainGrid)
                         smallGrid.grid(row=x2, column=y2)
 
-                        if self.isInLargeMode[3 * x1 + x2][3 * y1 + y2]:
-                            currentEntry = self.entries[3 * x1 + x2][3 * y1 + y2]
+                        if self.sudoku.isInLargeMode[3 * x1 + x2][3 * y1 + y2]:
+                            currentEntry = self.sudoku.entries[3 * x1 + x2][3 * y1 + y2]
 
                             if self.selectedCell[0] == 3*x1 + x2 and self.selectedCell[1] == 3*y1 + y2:
                                 if self.currentMode == 'LARGE':
@@ -140,7 +141,7 @@ class SudokuGrid:
                                     color = '#FF00FF'
                             else:
                                 color = '#FFFFFF'
-                            self.labels[3*x1 + x2][3*y1 + y2] = self.buildSmallLabel(smallGrid, self.entries[3*x1+x2][3*y1+y2], color)
+                            self.labels[3*x1 + x2][3*y1 + y2] = self.buildSmallLabel(smallGrid, self.sudoku.entries[3*x1+x2][3*y1+y2], color)
 
                             clickDetector = self.onClick(3 * x1 + x2, 3 * y1 + y2)
                             self.labels[3 * x1 + x2][3 * y1 + y2].bind('<Button-1>', clickDetector)
@@ -149,5 +150,5 @@ if __name__ == '__main__':
     window = tk.Tk()
     pixel = tk.PhotoImage(width=1, height=1)
 
-    sudoku = SudokuGrid(window)
+    sudoku = SudokuUI(window)
     window.mainloop()
