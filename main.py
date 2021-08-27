@@ -75,11 +75,9 @@ class SudokuUI:
 
     def buildSmallLabel(self, master, text, color):
         labels = [None for i in range(0, 9)]
+        miniGrid = tk.Frame(master=master)
         for x in range(0, 3):
             for y in range(0, 3):
-                miniGrid = tk.Frame(master=master)
-                miniGrid.grid(row=x, column=y)
-
                 if 3 * x + y + 1 in text:
                     currentEntry = 3 * x + y + 1
                 else:
@@ -96,7 +94,6 @@ class SudokuUI:
                     fg="black",
                     compound="c",
                 )
-                # TODO: Pass the clicks up to the minigrid to be detected, currently broken
                 labels[3 * x + y].bindtags((miniGrid,) + labels[3 * x + y].bindtags())
 
                 labels[3 * x + y]['font'] = self.smallNumberFont
@@ -128,7 +125,7 @@ class SudokuUI:
                                 color = '#FFFFFF'
                             self.labels[3 * x1 + x2][3 * y1 + y2] = self.buildLargeLabel(smallGrid, currentEntry, color)
 
-                            self.labels[3 * x1 + x2][3 * y1 + y2].grid(row=x2, column=y2, padx=1, pady=1)
+                            self.labels[3 * x1 + x2][3 * y1 + y2].grid(row=0, column=0, padx=1, pady=1)
 
                             clickDetector = self.onClick(3 * x1 + x2, 3 * y1 + y2)
                             self.labels[3 * x1 + x2][3 * y1 + y2].bind('<Button-1>', clickDetector)
@@ -142,7 +139,7 @@ class SudokuUI:
                             else:
                                 color = '#FFFFFF'
                             self.labels[3*x1 + x2][3*y1 + y2] = self.buildSmallLabel(smallGrid, self.sudoku.entries[3*x1+x2][3*y1+y2], color)
-
+                            self.labels[3*x1 + x2][3*y1 + y2].grid(row=0, column=0, padx=1, pady=1)
                             clickDetector = self.onClick(3 * x1 + x2, 3 * y1 + y2)
                             self.labels[3 * x1 + x2][3 * y1 + y2].bind('<Button-1>', clickDetector)
 
