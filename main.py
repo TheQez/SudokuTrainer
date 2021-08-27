@@ -6,6 +6,44 @@ class SudokuGrid:
         self.entries = initState
         self.isInLargeMode = [[True for i in range(0, 9)] for j in range(0, 9)]
 
+    # Does not check pencil markings
+    def isNoDuplicates(self):
+        # Rows
+        for i in range(0, 9):
+            row = []
+            for j in range(0, 9):
+                if self.isInLargeMode[i][j]:
+                    if self.entries[i][j] in [str(n) for n in range(1, 10)]:
+                        row.append(self.entries[i][j])
+            if len(row) != len(set(row)):
+                return False
+
+        # Column
+        for i in range(0, 9):
+            column = []
+            for j in range(0, 9):
+                if self.isInLargeMode[j][i]:
+                    if self.entries[j][i] in [str(n) for n in range(1, 10)]:
+                        column.append(self.entries[j][i])
+            if len(column) != len(set(column)):
+                return False
+
+        # Boxes
+        for x1 in range(0, 3):
+            for y1 in range(0, 3):
+                box = []
+                for x2 in range(0, 3):
+                    for y2 in range(0, 3):
+                        if self.isInLargeMode[3 * x1 + x2][3 * y1 + y2]:
+                            if self.entries[3 * x1 + x2][3 * y1 + y2] in [str(n) for n in range(1, 10)]:
+                                box.append(self.entries[3 * x1 + x2][3 * y1 + y2])
+                if len(box) != len(set(box)):
+                    return False
+
+        return True
+
+
+
 class SudokuUI:
     selectedCell = (None, None)
     labels = [[0 for i in range(0, 9)] for j in range(0, 9)]
