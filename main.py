@@ -1,5 +1,7 @@
+import copy
 import tkinter as tk
 import tkinter.font as font
+from itertools import product
 
 class SudokuGrid:
     def __init__(self, initState=[[' ' for i in range(0, 9)]for j in range(0, 9)]):
@@ -42,7 +44,35 @@ class SudokuGrid:
 
         return True
 
+    def solutions(self):
+        # Find the next cell not filled
+        x, y = None, None
+        for i, j in product(range(0, 9), range(0, 9)):
+            if not self.isInLargeMode[i][j] or self.entries[i][j] not in [str(n) for n in range(1, 10)]:
+                x, y = i, j
+                break
 
+        # Base case, after sudoku completely filled
+        if (x, y) == (None, None):
+            if self.isNoDuplicates():
+                return [self]
+            else:
+                return []
+
+        if not self.isInLargeMode[x][y]:
+            candidates = self.entries[x][y]
+        else:
+            candidates = [str(n) for n in range(1, 10)]
+
+        solutions = []
+        for candidate in candidates:
+            nextSudoku = copy.deepcopy(self)
+            nextSudoku.isInLargeMode[x][y] = True
+            nextSudoku.entries[x][y] = str(candidate)
+            if nextSudoku.isNoDuplicates():
+                solutions += nextSudoku.solutions()
+
+        return solutions
 
 class SudokuUI:
     selectedCell = (None, None)
@@ -51,11 +81,11 @@ class SudokuUI:
     smallNumberFont = None
 
     currentMode = 'LARGE'
-    def __init__(self, window):
+    def __init__(self, window, sudoku=SudokuGrid()):
         # TODO: Have a real init function
         self.window = window
 
-        self.sudoku = SudokuGrid()
+        self.sudoku = sudoku
 
         window.bind('<KeyPress>', self.onKeyPress)
 
@@ -93,6 +123,12 @@ class SudokuUI:
                 self.currentMode = 'SMALL'
             else:
                 self.currentMode = 'LARGE'
+
+        if event.char == '0':
+            sols = self.sudoku.solutions()
+            print(len(sols))
+            if len(sols) != 0:
+                self.sudoku = sols[0]
 
         self.update()
 
