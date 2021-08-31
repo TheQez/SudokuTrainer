@@ -31,3 +31,30 @@ class SudokuTactic(ABC):
                     if sudoku.entries[x-(x%3)+i][y-(y%3)+j] == str(number):
                         return True
         return False
+
+    # Checks the number of pencil markings in a row
+    @staticmethod
+    def numInRow(sudoku, number, row):
+        count = 0
+        for i in range(0, 9):
+            if not sudoku.isInLargeMode[row][i] and number in sudoku.entries[row][i]:
+                count += 1
+        return count
+
+    @staticmethod
+    def numInColumn(sudoku, number, column):
+        count = 0
+        for i in range(0, 9):
+            if not sudoku.isInLargeMode[i][column] and number in sudoku.entries[i][column]:
+                count += 1
+        return count
+
+    @staticmethod
+    def numInBox(sudoku, number, x, y):
+        count = 0
+        for i in range(0, 3):
+            for j in range(0, 3):
+                if not sudoku.isInLargeMode[x-(x%3)+i][y-(y%3)+j]:
+                    if number in sudoku.entries[x-(x%3)+i][y-(y%3)+j]:
+                        count += 1
+        return count

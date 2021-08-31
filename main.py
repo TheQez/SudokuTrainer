@@ -82,6 +82,15 @@ class SudokuGrid:
                     self.isInLargeMode[i][j] = False
                     self.entries[i][j] = [n for n in range(1, 10)]
 
+    def step(self):
+        self.addPenciling()
+        for tactic in tactics:
+            newSudoku = tactic.apply(self)
+            if newSudoku.entries != self.entries:
+                self.isInLargeMode = newSudoku.isInLargeMode
+                self.entries = newSudoku.entries
+                print(tactic.__class__.__name__)
+                break
 
 class SudokuUI:
     selectedCell = (None, None)
@@ -139,15 +148,8 @@ class SudokuUI:
             if len(sols) != 0:
                 self.sudoku = sols[0]
 
-        # Need to make a proper step by step solver
-        if event.char == "f":
-            self.sudoku.addPenciling()
-            tactic1 = TrivialPenciling()
-            newSudoku = tactic1.apply(self.sudoku)
-            if newSudoku.entries == self.sudoku.entries:
-                tactic2 = NakedSingle()
-                newSudoku = tactic2.apply(self.sudoku)
-            self.sudoku = newSudoku
+        if event.char == "s":
+            self.sudoku.step()
 
         self.update()
 
@@ -236,12 +238,19 @@ class SudokuUI:
                             clickDetector = self.onClick(3 * x1 + x2, 3 * y1 + y2)
                             self.labels[3 * x1 + x2][3 * y1 + y2].bind('<Button-1>', clickDetector)
 
+from tactics.SudokuTactic import SudokuTactic
 from tactics.TrivialPenciling import TrivialPenciling
 from tactics.NakedSingle import NakedSingle
+from tactics.HiddenSingle import HiddenSingle
 
 if __name__ == '__main__':
     window = tk.Tk()
     pixel = tk.PhotoImage(width=1, height=1)
+
+    tactics = []
+    tactics.append(TrivialPenciling())
+    tactics.append(NakedSingle())
+    tactics.append(HiddenSingle())
 
     sudoku = SudokuUI(window)
     window.mainloop()
