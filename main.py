@@ -2,6 +2,7 @@ import copy
 import tkinter as tk
 import tkinter.font as font
 from itertools import product
+from abc import ABC, abstractmethod
 
 class SudokuGrid:
     def __init__(self, initState=[[' ' for i in range(0, 9)]for j in range(0, 9)]):
@@ -74,6 +75,14 @@ class SudokuGrid:
 
         return solutions
 
+    def addPenciling(self):
+        for i in range(0, 9):
+            for j in range(0, 9):
+                if self.isInLargeMode[i][j] and self.entries[i][j] not in [str(n) for n in range(1, 10)]:
+                    self.isInLargeMode[i][j] = False
+                    self.entries[i][j] = [n for n in range(1, 10)]
+
+
 class SudokuUI:
     selectedCell = (None, None)
     labels = [[0 for i in range(0, 9)] for j in range(0, 9)]
@@ -129,6 +138,16 @@ class SudokuUI:
             print(len(sols))
             if len(sols) != 0:
                 self.sudoku = sols[0]
+
+        # Need to make a proper step by step solver
+        if event.char == "f":
+            self.sudoku.addPenciling()
+            tactic1 = TrivialPenciling()
+            newSudoku = tactic1.apply(self.sudoku)
+            if newSudoku.entries == self.sudoku.entries:
+                tactic2 = NakedSingle()
+                newSudoku = tactic2.apply(self.sudoku)
+            self.sudoku = newSudoku
 
         self.update()
 
@@ -216,6 +235,9 @@ class SudokuUI:
                             self.labels[3*x1 + x2][3*y1 + y2].grid(row=0, column=0, padx=1, pady=1)
                             clickDetector = self.onClick(3 * x1 + x2, 3 * y1 + y2)
                             self.labels[3 * x1 + x2][3 * y1 + y2].bind('<Button-1>', clickDetector)
+
+from tactics.TrivialPenciling import TrivialPenciling
+from tactics.NakedSingle import NakedSingle
 
 if __name__ == '__main__':
     window = tk.Tk()
