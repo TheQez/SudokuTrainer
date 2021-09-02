@@ -16,7 +16,7 @@ class SudokuGrid:
             row = []
             for j in range(0, 9):
                 if self.isInLargeMode[i][j]:
-                    if self.entries[i][j] in [str(n) for n in range(1, 10)]:
+                    if self.entries[i][j] in range(1, 10):
                         row.append(self.entries[i][j])
             if len(row) != len(set(row)):
                 return False
@@ -26,7 +26,7 @@ class SudokuGrid:
             column = []
             for j in range(0, 9):
                 if self.isInLargeMode[j][i]:
-                    if self.entries[j][i] in [str(n) for n in range(1, 10)]:
+                    if self.entries[j][i] in range(1, 10):
                         column.append(self.entries[j][i])
             if len(column) != len(set(column)):
                 return False
@@ -38,7 +38,7 @@ class SudokuGrid:
                 for x2 in range(0, 3):
                     for y2 in range(0, 3):
                         if self.isInLargeMode[3 * x1 + x2][3 * y1 + y2]:
-                            if self.entries[3 * x1 + x2][3 * y1 + y2] in [str(n) for n in range(1, 10)]:
+                            if self.entries[3 * x1 + x2][3 * y1 + y2] in range(1, 10):
                                 box.append(self.entries[3 * x1 + x2][3 * y1 + y2])
                 if len(box) != len(set(box)):
                     return False
@@ -49,7 +49,7 @@ class SudokuGrid:
         # Find the next cell not filled
         x, y = None, None
         for i, j in product(range(0, 9), range(0, 9)):
-            if not self.isInLargeMode[i][j] or self.entries[i][j] not in [str(n) for n in range(1, 10)]:
+            if not self.isInLargeMode[i][j] or self.entries[i][j] not in range(1, 10):
                 x, y = i, j
                 break
 
@@ -63,13 +63,13 @@ class SudokuGrid:
         if not self.isInLargeMode[x][y]:
             candidates = self.entries[x][y]
         else:
-            candidates = [str(n) for n in range(1, 10)]
+            candidates = range(1, 10)
 
         solutions = []
         for candidate in candidates:
             nextSudoku = copy.deepcopy(self)
             nextSudoku.isInLargeMode[x][y] = True
-            nextSudoku.entries[x][y] = str(candidate)
+            nextSudoku.entries[x][y] = candidate
             if nextSudoku.isNoDuplicates():
                 solutions += nextSudoku.solutions()
 
@@ -78,7 +78,7 @@ class SudokuGrid:
     def addPenciling(self):
         for i in range(0, 9):
             for j in range(0, 9):
-                if self.isInLargeMode[i][j] and self.entries[i][j] not in [str(n) for n in range(1, 10)]:
+                if self.isInLargeMode[i][j] and self.entries[i][j] not in range(1, 10):
                     self.isInLargeMode[i][j] = False
                     self.entries[i][j] = [n for n in range(1, 10)]
 
@@ -123,10 +123,10 @@ class SudokuUI:
         if event.char.isdigit() and event.char != '0':
             if self.currentMode == 'LARGE':
                 self.sudoku.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = True
-                if self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] == event.char:
+                if self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] == int(event.char):
                     self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] = None
                 else:
-                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] = event.char
+                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] = int(event.char)
             else:
                 self.sudoku.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = False
                 if type(self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]]) is not list:

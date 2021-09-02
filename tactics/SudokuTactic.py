@@ -10,7 +10,7 @@ class SudokuTactic(ABC):
     def isInRow(sudoku, number, row):
         for i in range(0, 9):
             if sudoku.isInLargeMode[row][i]:
-                if sudoku.entries[row][i] == str(number):
+                if sudoku.entries[row][i] == number:
                     return True
         return False
 
@@ -18,7 +18,7 @@ class SudokuTactic(ABC):
     def isInColumn(sudoku, number, column):
         for i in range(0, 9):
             if sudoku.isInLargeMode[i][column]:
-                if sudoku.entries[i][column] == str(number):
+                if sudoku.entries[i][column] == number:
                     return True
         return False
 
@@ -28,7 +28,7 @@ class SudokuTactic(ABC):
         for i in range(0, 3):
             for j in range(0, 3):
                 if sudoku.isInLargeMode[x-(x%3)+i][y-(y%3)+j]:
-                    if sudoku.entries[x-(x%3)+i][y-(y%3)+j] == str(number):
+                    if sudoku.entries[x-(x%3)+i][y-(y%3)+j] == number:
                         return True
         return False
 

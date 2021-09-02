@@ -10,7 +10,7 @@ class HiddenSingle(SudokuTactic):
                     for num in sudoku.entries[i][j]:
                         if SudokuTactic.numInRow(sudoku, num, i) == 1 or SudokuTactic.numInColumn(sudoku, num, j) == 1 or SudokuTactic.numInBox(sudoku, num, i, j) == 1:
                             newSudoku.isInLargeMode[i][j] = True
-                            newSudoku.entries[i][j] = str(num)
+                            newSudoku.entries[i][j] = num
                             break
         return newSudoku
 
