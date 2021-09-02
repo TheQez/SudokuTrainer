@@ -242,6 +242,7 @@ from tactics.SudokuTactic import SudokuTactic
 from tactics.TrivialPenciling import TrivialPenciling
 from tactics.NakedSingle import NakedSingle
 from tactics.HiddenSingle import HiddenSingle
+from tactics.NakedDouble import NakedDouble
 
 if __name__ == '__main__':
     window = tk.Tk()
@@ -251,6 +252,7 @@ if __name__ == '__main__':
     tactics.append(TrivialPenciling())
     tactics.append(NakedSingle())
     tactics.append(HiddenSingle())
+    tactics.append(NakedDouble())
 
     sudoku = SudokuUI(window)
     window.mainloop()

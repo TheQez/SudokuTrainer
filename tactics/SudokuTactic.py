@@ -58,3 +58,14 @@ class SudokuTactic(ABC):
                     if number in sudoku.entries[x-(x%3)+i][y-(y%3)+j]:
                         count += 1
         return count
+
+    @staticmethod
+    def isConnected(x1, y1, x2, y2):
+        if x1 == x2 or y1 == y2:
+            return True
+
+        # If in the same box
+        if (x1 // 3 == x2 // 3) and (y1 // 3 == y2 // 3):
+            return True
+
+        return False
