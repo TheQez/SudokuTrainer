@@ -8,5 +8,6 @@ class NakedSingle(SudokuTactic):
             for j in range(0, 9):
                 if not sudoku.isInLargeMode[i][j] and len(sudoku.entries[i][j]) == 1:
                     newSudoku.isInLargeMode[i][j] = True
-                    newSudoku.entries[i][j] = sudoku.entries[i][j][0]
+                    (element, ) = sudoku.entries[i][j]
+                    newSudoku.entries[i][j] = element
         return newSudoku

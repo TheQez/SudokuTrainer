@@ -5,7 +5,7 @@ from itertools import product
 from abc import ABC, abstractmethod
 
 class SudokuGrid:
-    def __init__(self, initState=[[' ' for i in range(0, 9)]for j in range(0, 9)]):
+    def __init__(self, initState=[[None for i in range(0, 9)]for j in range(0, 9)]):
         self.entries = initState
         self.isInLargeMode = [[True for i in range(0, 9)] for j in range(0, 9)]
 
@@ -80,7 +80,7 @@ class SudokuGrid:
             for j in range(0, 9):
                 if self.isInLargeMode[i][j] and self.entries[i][j] not in range(1, 10):
                     self.isInLargeMode[i][j] = False
-                    self.entries[i][j] = [n for n in range(1, 10)]
+                    self.entries[i][j] = set([n for n in range(1, 10)])
 
     def step(self):
         self.addPenciling()
@@ -129,10 +129,10 @@ class SudokuUI:
                     self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] = int(event.char)
             else:
                 self.sudoku.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = False
-                if type(self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]]) is not list:
-                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] = []
+                if type(self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]]) is not set:
+                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]] = set()
                 if int(event.char) not in self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]]:
-                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]].append(int(event.char))
+                    self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]].add(int(event.char))
                 else:
                     self.sudoku.entries[self.selectedCell[0]][self.selectedCell[1]].remove(int(event.char))
 
