@@ -78,7 +78,7 @@ class SudokuGrid:
     def addPenciling(self):
         for i in range(0, 9):
             for j in range(0, 9):
-                if self.isInLargeMode[i][j] and self.entries[i][j] not in range(1, 10):
+                if (self.isInLargeMode[i][j] and self.entries[i][j] not in range(1, 10)) or (not self.isInLargeMode[i][j] and len(self.entries[i][j]) == 0):
                     self.isInLargeMode[i][j] = False
                     self.entries[i][j] = set([n for n in range(1, 10)])
 
