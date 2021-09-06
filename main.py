@@ -92,7 +92,19 @@ class SudokuGrid:
                 print(tactic.__class__.__name__)
                 break
 
+class BackgroundColor():
+    DEFAULT = '#FFFFFF'
+    LARGESELECTED = '#FFFF00'
+    SMALLSELECTED = '#FF00FF'
+
+class TextColor():
+    DEFAULT = '#000000'
+    REMOVED = '#FF0000'
+    USEFUL = '#00FF00'
+
 class SudokuUI:
+
+
     selectedCell = (None, None)
     labels = [[0 for i in range(0, 9)] for j in range(0, 9)]
     mainNumberFont = None
@@ -153,7 +165,7 @@ class SudokuUI:
 
         self.update()
 
-    def buildLargeLabel(self, master, text, color):
+    def buildLargeLabel(self, master, text, bgcolor, fgcolor):
         label = tk.Label(
             master=master,
             image=pixel,
@@ -161,14 +173,14 @@ class SudokuUI:
             width=48,
             height=48,
             borderwidth=0,
-            bg=color,
-            fg="black",
+            bg=bgcolor,
+            fg=fgcolor,
             compound="c",
         )
         label['font'] = self.mainNumberFont
         return label
 
-    def buildSmallLabel(self, master, text, color):
+    def buildSmallLabel(self, master, text, bgcolor, fgcolor):
         labels = [None for i in range(0, 9)]
         miniGrid = tk.Frame(master=master)
         for x in range(0, 3):
@@ -185,8 +197,8 @@ class SudokuUI:
                     width=16,
                     height=16,
                     borderwidth=0,
-                    bg=color,
-                    fg="black",
+                    bg=bgcolor,
+                    fg=fgcolor[x][y],
                     compound="c",
                 )
                 labels[3 * x + y].bindtags((miniGrid,) + labels[3 * x + y].bindtags())
@@ -213,12 +225,12 @@ class SudokuUI:
 
                             if self.selectedCell[0] == 3*x1 + x2 and self.selectedCell[1] == 3*y1 + y2:
                                 if self.currentMode == 'LARGE':
-                                    color = '#FFFF00'
+                                    color = BackgroundColor.LARGESELECTED
                                 else:
-                                    color = '#FF00FF'
+                                    color = BackgroundColor.SMALLSELECTED
                             else:
-                                color = '#FFFFFF'
-                            self.labels[3 * x1 + x2][3 * y1 + y2] = self.buildLargeLabel(smallGrid, currentEntry, color)
+                                color = BackgroundColor.DEFAULT
+                            self.labels[3 * x1 + x2][3 * y1 + y2] = self.buildLargeLabel(smallGrid, currentEntry, color, TextColor.DEFAULT)
 
                             self.labels[3 * x1 + x2][3 * y1 + y2].grid(row=0, column=0, padx=1, pady=1)
 
@@ -228,12 +240,13 @@ class SudokuUI:
                         else:
                             if self.selectedCell[0] == 3*x1 + x2 and self.selectedCell[1] == 3*y1 + y2:
                                 if self.currentMode == 'LARGE':
-                                    color = '#FFFF00'
+                                    color = BackgroundColor.LARGESELECTED
                                 else:
-                                    color = '#FF00FF'
+                                    color = BackgroundColor.SMALLSELECTED
                             else:
-                                color = '#FFFFFF'
-                            self.labels[3*x1 + x2][3*y1 + y2] = self.buildSmallLabel(smallGrid, self.sudoku.entries[3*x1+x2][3*y1+y2], color)
+                                color = BackgroundColor.DEFAULT
+                            fgcolor = [[TextColor.DEFAULT for i in range(0, 3)] for j in range(0, 3)]
+                            self.labels[3*x1 + x2][3*y1 + y2] = self.buildSmallLabel(smallGrid, self.sudoku.entries[3*x1+x2][3*y1+y2], color, fgcolor)
                             self.labels[3*x1 + x2][3*y1 + y2].grid(row=0, column=0, padx=1, pady=1)
                             clickDetector = self.onClick(3 * x1 + x2, 3 * y1 + y2)
                             self.labels[3 * x1 + x2][3 * y1 + y2].bind('<Button-1>', clickDetector)
