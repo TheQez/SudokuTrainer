@@ -82,15 +82,14 @@ class SudokuGrid:
                     self.isInLargeMode[i][j] = False
                     self.entries[i][j] = set([n for n in range(1, 10)])
 
-    def step(self):
+    def getTactic(self):
         self.addPenciling()
         for tactic in tactics:
-            newSudoku = tactic.apply(self)
+            newSudoku, highlightedEntries, removedEntries = tactic.apply(self)
             if newSudoku.entries != self.entries:
-                self.isInLargeMode = newSudoku.isInLargeMode
-                self.entries = newSudoku.entries
                 print(tactic.__class__.__name__)
                 break
+        return newSudoku, highlightedEntries, removedEntries
 
 class BackgroundColor():
     DEFAULT = '#FFFFFF'
@@ -103,14 +102,13 @@ class TextColor():
     USEFUL = '#00FF00'
 
 class SudokuUI:
-
-
     selectedCell = (None, None)
     labels = [[0 for i in range(0, 9)] for j in range(0, 9)]
     mainNumberFont = None
     smallNumberFont = None
 
     currentMode = 'LARGE'
+    isShowingTactic = False
     def __init__(self, window, sudoku=SudokuGrid()):
         # TODO: Have a real init function
         self.window = window
@@ -161,7 +159,15 @@ class SudokuUI:
                 self.sudoku = sols[0]
 
         if event.char == "s":
-            self.sudoku.step()
+            if not self.isShowingTactic:
+                self.newSudoku, self.highlightedEntries, self.removedEntries = self.sudoku.getTactic()
+                if (self.newSudoku.isInLargeMode != self.sudoku.isInLargeMode) or (self.newSudoku.entries != self.sudoku.entries):
+                    self.isShowingTactic = True
+                else:
+                    print('Failed to apply any tactic')
+            else:
+                self.isShowingTactic = False
+                self.sudoku = self.newSudoku
 
         self.update()
 
@@ -240,13 +246,22 @@ class SudokuUI:
                         else:
                             if self.selectedCell[0] == 3*x1 + x2 and self.selectedCell[1] == 3*y1 + y2:
                                 if self.currentMode == 'LARGE':
-                                    color = BackgroundColor.LARGESELECTED
+                                    bgcolor = BackgroundColor.LARGESELECTED
                                 else:
-                                    color = BackgroundColor.SMALLSELECTED
+                                    bgcolor = BackgroundColor.SMALLSELECTED
                             else:
-                                color = BackgroundColor.DEFAULT
-                            fgcolor = [[TextColor.DEFAULT for i in range(0, 3)] for j in range(0, 3)]
-                            self.labels[3*x1 + x2][3*y1 + y2] = self.buildSmallLabel(smallGrid, self.sudoku.entries[3*x1+x2][3*y1+y2], color, fgcolor)
+                                bgcolor = BackgroundColor.DEFAULT
+
+                            fgcolor = [[None for i in range(0, 3)] for j in range(0, 3)]
+                            for i, j in product(range(0, 3), range(0, 3)):
+                                if self.isShowingTactic and (3*i + j + 1) in self.highlightedEntries[3*x1 + x2][3*y1 + y2]:
+                                    fgcolor[i][j] = TextColor.USEFUL
+                                elif self.isShowingTactic and (3*i + j + 1) in self.removedEntries[3*x1 + x2][3*y1 + y2]:
+                                    fgcolor[i][j] = TextColor.REMOVED
+                                else:
+                                    fgcolor[i][j] = TextColor.DEFAULT
+
+                            self.labels[3*x1 + x2][3*y1 + y2] = self.buildSmallLabel(smallGrid, self.sudoku.entries[3*x1+x2][3*y1+y2], bgcolor, fgcolor)
                             self.labels[3*x1 + x2][3*y1 + y2].grid(row=0, column=0, padx=1, pady=1)
                             clickDetector = self.onClick(3 * x1 + x2, 3 * y1 + y2)
                             self.labels[3 * x1 + x2][3 * y1 + y2].bind('<Button-1>', clickDetector)

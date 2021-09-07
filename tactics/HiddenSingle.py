@@ -4,6 +4,8 @@ from copy import deepcopy
 class HiddenSingle(SudokuTactic):
     def apply(self, sudoku):
         newSudoku = deepcopy(sudoku)
+        highlightedEntries = [[set() for i in range(0, 9)] for j in range(0, 9)]
+        removedEntries = [[set() for i in range(0, 9)] for j in range(0, 9)]
         for i in range(0, 9):
             for j in range(0, 9):
                 if not sudoku.isInLargeMode[i][j]:
@@ -11,7 +13,8 @@ class HiddenSingle(SudokuTactic):
                         if SudokuTactic.numInRow(sudoku, num, i) == 1 or SudokuTactic.numInColumn(sudoku, num, j) == 1 or SudokuTactic.numInBox(sudoku, num, i, j) == 1:
                             newSudoku.isInLargeMode[i][j] = True
                             newSudoku.entries[i][j] = num
+                            highlightedEntries[i][j].add(num)
                             break
-        return newSudoku
+        return newSudoku, highlightedEntries, removedEntries
 
 
