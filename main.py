@@ -46,8 +46,10 @@ class SudokuGrid:
         return True
 
     def solutions(self):
-        currentSudoku = self
+        currentSudoku = copy.deepcopy(self)
         while True:
+            if not currentSudoku.isNoDuplicates():
+                return []
             nextSudoku = currentSudoku.getTactic()[0]
             if (nextSudoku.isInLargeMode == currentSudoku.isInLargeMode) and (nextSudoku.entries == currentSudoku.entries):
                 break
@@ -100,6 +102,13 @@ class SudokuGrid:
                 print(tactic.__class__.__name__)
                 break
         return newSudoku, highlightedEntries, removedEntries
+
+    def isValid(self):
+        sols = self.solutions()
+        if len(sols) == 1:
+            return True
+        else:
+            return False
 
 class BackgroundColor():
     DEFAULT = '#FFFFFF'
@@ -178,6 +187,9 @@ class SudokuUI:
             else:
                 self.isShowingTactic = False
                 self.sudoku = self.newSudoku
+
+        if event.char == "v":
+            print(self.sudoku.isValid())
 
         self.update()
 
