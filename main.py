@@ -46,6 +46,16 @@ class SudokuGrid:
         return True
 
     def solutions(self):
+        currentSudoku = self
+        while True:
+            nextSudoku = currentSudoku.getTactic()[0]
+            if (nextSudoku.isInLargeMode == currentSudoku.isInLargeMode) and (nextSudoku.entries == currentSudoku.entries):
+                break
+            currentSudoku = nextSudoku
+
+        return currentSudoku.bruteForce()
+
+    def bruteForce(self):
         # Find the next cell not filled
         x, y = None, None
         for i, j in product(range(0, 9), range(0, 9)):
@@ -71,7 +81,7 @@ class SudokuGrid:
             nextSudoku.isInLargeMode[x][y] = True
             nextSudoku.entries[x][y] = candidate
             if nextSudoku.isNoDuplicates():
-                solutions += nextSudoku.solutions()
+                solutions += nextSudoku.bruteForce()
 
         return solutions
 
