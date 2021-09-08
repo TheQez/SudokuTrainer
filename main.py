@@ -58,6 +58,7 @@ class SudokuGrid:
         return currentSudoku.bruteForce()
 
     def bruteForce(self):
+        solutionsCutoff = 10 #Number of solutions to be found before giving up
         # Find the next cell not filled
         x, y = None, None
         for i, j in product(range(0, 9), range(0, 9)):
@@ -84,6 +85,8 @@ class SudokuGrid:
             nextSudoku.entries[x][y] = candidate
             if nextSudoku.isNoDuplicates():
                 solutions += nextSudoku.bruteForce()
+            if len(solutions) >= solutionsCutoff:
+                break
 
         return solutions
 
