@@ -3,6 +3,7 @@ import tkinter as tk
 import tkinter.font as font
 from itertools import product
 from abc import ABC, abstractmethod
+import random
 
 class SudokuGrid:
     def __init__(self, initState=[[None for i in range(0, 9)]for j in range(0, 9)]):
@@ -57,8 +58,7 @@ class SudokuGrid:
 
         return currentSudoku.bruteForce()
 
-    def bruteForce(self):
-        solutionsCutoff = 10 #Number of solutions to be found before giving up
+    def bruteForce(self, solutionsCutoff=10, randomised=False):
         # Find the next cell not filled
         x, y = None, None
         for i, j in product(range(0, 9), range(0, 9)):
@@ -74,9 +74,12 @@ class SudokuGrid:
                 return []
 
         if not self.isInLargeMode[x][y]:
-            candidates = self.entries[x][y]
+            candidates = list(self.entries[x][y])
         else:
-            candidates = range(1, 10)
+            candidates = [n for n in range(1, 10)]
+
+        if randomised:
+            random.shuffle(candidates)
 
         solutions = []
         for candidate in candidates:
