@@ -105,9 +105,9 @@ class SudokuGrid:
         for tactic in tactics:
             newSudoku, highlightedEntries, removedEntries = tactic.apply(self)
             if newSudoku.entries != self.entries:
-                print(tactic.__class__.__name__)
-                break
-        return newSudoku, highlightedEntries, removedEntries
+                #print(tactic.__class__.__name__)
+                return newSudoku, highlightedEntries, removedEntries, tactic.__class__
+        return self, set(), set(), None
 
     def isValid(self):
         sols = self.solutions()
@@ -185,8 +185,9 @@ class SudokuUI:
 
         if event.char == "s":
             if not self.isShowingTactic:
-                self.newSudoku, self.highlightedEntries, self.removedEntries = self.sudoku.getTactic()
+                self.newSudoku, self.highlightedEntries, self.removedEntries, tactic = self.sudoku.getTactic()
                 if (self.newSudoku.isInLargeMode != self.sudoku.isInLargeMode) or (self.newSudoku.entries != self.sudoku.entries):
+                    print(tactic.__name__)
                     self.isShowingTactic = True
                 else:
                     print('Failed to apply any tactic')
