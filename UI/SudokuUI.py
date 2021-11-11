@@ -22,7 +22,7 @@ class SudokuUI:
 
     currentMode = 'LARGE'
     isShowingTactic = False
-    def __init__(self, window, sudoku=SudokuGrid()):
+    def __init__(self, window: tk.Tk, sudoku: SudokuGrid=SudokuGrid()):
         # TODO: Have a real init function
         self.window = window
         self.pixel = tk.PhotoImage(width=1, height=1)
@@ -35,14 +35,14 @@ class SudokuUI:
 
         self.update()
 
-    def onClick(self, x, y):
+    def onClick(self, x: int, y: int):
         return lambda event: self.cellClicked(x, y)
 
-    def cellClicked(self, x, y):
+    def cellClicked(self, x: int, y: int):
         self.selectedCell = (x, y)
         self.update()
 
-    def onKeyPress(self, event):
+    def onKeyPress(self, event: tk.Event):
         if event.char.isdigit() and event.char != '0':
             if self.currentMode == 'LARGE':
                 self.sudoku.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = True
@@ -91,7 +91,7 @@ class SudokuUI:
 
         self.update()
 
-    def buildLargeLabel(self, master, text, bgcolor, fgcolor):
+    def buildLargeLabel(self, master: tk.Frame, text, bgcolor: str, fgcolor: str) -> tk.Label:
         label = tk.Label(
             master=master,
             image=self.pixel,
@@ -106,7 +106,7 @@ class SudokuUI:
         label['font'] = self.mainNumberFont
         return label
 
-    def buildSmallLabel(self, master, text, bgcolor, fgcolor):
+    def buildSmallLabel(self, master: tk.Frame, text, bgcolor: str, fgcolor: str) -> tk.Frame:
         labels = [None for i in range(0, 9)]
         miniGrid = tk.Frame(master=master)
         for x in range(0, 3):

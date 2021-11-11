@@ -1,13 +1,18 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
+import SudokuGrid
+from typing import List, Set
+
 
 class SudokuTactic(ABC):
 
+    applyType = tuple[SudokuGrid, List[List[Set]], List[List[Set]]]
     @abstractmethod
-    def apply(self, sudoku):
+    def apply(self, sudoku: SudokuGrid) -> applyType:
         pass
 
     @staticmethod
-    def isInRow(sudoku, number, row):
+    def isInRow(sudoku: SudokuGrid.SudokuGrid, number: int, row: int) -> bool:
         for i in range(0, 9):
             if sudoku.isInLargeMode[row][i]:
                 if sudoku.entries[row][i] == number:
@@ -15,7 +20,7 @@ class SudokuTactic(ABC):
         return False
 
     @staticmethod
-    def isInColumn(sudoku, number, column):
+    def isInColumn(sudoku: SudokuGrid.SudokuGrid, number: int, column: int) -> bool:
         for i in range(0, 9):
             if sudoku.isInLargeMode[i][column]:
                 if sudoku.entries[i][column] == number:
@@ -24,7 +29,7 @@ class SudokuTactic(ABC):
 
     # Checks if number appears in same box as (x, y)
     @staticmethod
-    def isInBox(sudoku, number, x, y):
+    def isInBox(sudoku: SudokuGrid.SudokuGrid, number: int, x: int, y: int) -> bool:
         for i in range(0, 3):
             for j in range(0, 3):
                 if sudoku.isInLargeMode[x-(x%3)+i][y-(y%3)+j]:
@@ -34,7 +39,7 @@ class SudokuTactic(ABC):
 
     # Checks the number of pencil markings in a row
     @staticmethod
-    def numInRow(sudoku, number, row):
+    def numInRow(sudoku: SudokuGrid.SudokuGrid, number: int, row: int) -> int:
         count = 0
         for i in range(0, 9):
             if not sudoku.isInLargeMode[row][i] and number in sudoku.entries[row][i]:
@@ -42,7 +47,7 @@ class SudokuTactic(ABC):
         return count
 
     @staticmethod
-    def numInColumn(sudoku, number, column):
+    def numInColumn(sudoku: SudokuGrid.SudokuGrid, number: int, column: int) -> int:
         count = 0
         for i in range(0, 9):
             if not sudoku.isInLargeMode[i][column] and number in sudoku.entries[i][column]:
@@ -50,7 +55,7 @@ class SudokuTactic(ABC):
         return count
 
     @staticmethod
-    def numInBox(sudoku, number, x, y):
+    def numInBox(sudoku: SudokuGrid.SudokuGrid, number: int, x: int, y: int) -> int:
         count = 0
         for i in range(0, 3):
             for j in range(0, 3):
@@ -60,7 +65,7 @@ class SudokuTactic(ABC):
         return count
 
     @staticmethod
-    def isConnected(x1, y1, x2, y2):
+    def isConnected(x1: int, y1: int, x2: int, y2: int) -> bool:
         if x1 == x2 or y1 == y2:
             return True
 

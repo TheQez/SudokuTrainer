@@ -1,6 +1,7 @@
 from itertools import product
 import copy
 import random
+from typing import List
 
 from tactics.TrivialPenciling import TrivialPenciling
 from tactics.NakedSingle import NakedSingle
@@ -8,7 +9,7 @@ from tactics.HiddenSingle import HiddenSingle
 from tactics.NakedDouble import NakedDouble
 
 class SudokuGrid:
-    def __init__(self, initState=[[None for i in range(0, 9)]for j in range(0, 9)]):
+    def __init__(self, initState: List[List]=[[None for i in range(0, 9)] for j in range(0, 9)]):
         self.tactics = []
         self.tactics.append(TrivialPenciling())
         self.tactics.append(NakedSingle())
@@ -53,7 +54,7 @@ class SudokuGrid:
 
         return True
 
-    def solutions(self, solutionsCutoff=10, randomised=False):
+    def solutions(self, solutionsCutoff: int=10, randomised: bool=False) -> List['SudokuGrid']:
         currentSudoku = copy.deepcopy(self)
         while True:
             if not currentSudoku.isNoDuplicates():
@@ -64,7 +65,7 @@ class SudokuGrid:
             currentSudoku = nextSudoku
         return currentSudoku.bruteForce(solutionsCutoff=solutionsCutoff, randomised=randomised)
 
-    def bruteForce(self, solutionsCutoff=10, randomised=False):
+    def bruteForce(self, solutionsCutoff: int=10, randomised: bool=False) -> List['SudokuGrid']:
         # Find the next cell not filled
         x, y = None, None
         for i, j in product(range(0, 9), range(0, 9)):

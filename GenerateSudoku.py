@@ -4,7 +4,7 @@ import random
 from tactics.HiddenSingle import HiddenSingle
 from tactics.NakedDouble import NakedDouble
 
-def generateSudoku():
+def generateSudoku() -> SudokuGrid:
     while True:
         sudoku = SudokuGrid()
         sudoku = sudoku.bruteForce(solutionsCutoff=1, randomised=True)[0]
@@ -24,7 +24,7 @@ def generateSudoku():
             if NakedDouble in tactics:
                 return sudoku
 
-def getRequiredTactics(sudoku):
+def getRequiredTactics(sudoku: SudokuGrid):
     tactics = set()
     sudoku = copy.deepcopy(sudoku)
     while True:
