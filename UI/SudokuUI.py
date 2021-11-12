@@ -3,6 +3,7 @@ import tkinter as tk
 import tkinter.font as font
 from itertools import product
 import GenerateSudoku
+from typing import Union, List
 
 class BackgroundColor():
     DEFAULT = '#FFFFFF'
@@ -16,7 +17,7 @@ class TextColor():
 
 class SudokuUI:
     selectedCell = (None, None)
-    labels = [[0 for i in range(0, 9)] for j in range(0, 9)]
+    labels: Union[int, tk.Label, tk.Frame] = [[0 for i in range(0, 9)] for j in range(0, 9)]
     mainNumberFont = None
     smallNumberFont = None
 
@@ -42,7 +43,7 @@ class SudokuUI:
         self.selectedCell = (x, y)
         self.update()
 
-    def onKeyPress(self, event: tk.Event):
+    def onKeyPress(self, event: tk.EventType.KeyPress):
         if event.char.isdigit() and event.char != '0':
             if self.currentMode == 'LARGE':
                 self.sudoku.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = True
@@ -106,8 +107,8 @@ class SudokuUI:
         label['font'] = self.mainNumberFont
         return label
 
-    def buildSmallLabel(self, master: tk.Frame, text, bgcolor: str, fgcolor: str) -> tk.Frame:
-        labels = [None for i in range(0, 9)]
+    def buildSmallLabel(self, master: tk.Frame, text, bgcolor: str, fgcolor: List[List[str]]) -> tk.Frame:
+        smallLabels = []
         miniGrid = tk.Frame(master=master)
         for x in range(0, 3):
             for y in range(0, 3):
@@ -116,7 +117,7 @@ class SudokuUI:
                 else:
                     currentEntry = " "
 
-                labels[3 * x + y] = tk.Label(
+                smallLabels.append(tk.Label(
                     master=miniGrid,
                     image=self.pixel,
                     text=currentEntry,
@@ -126,11 +127,11 @@ class SudokuUI:
                     bg=bgcolor,
                     fg=fgcolor[x][y],
                     compound="c",
-                )
-                labels[3 * x + y].bindtags((miniGrid,) + labels[3 * x + y].bindtags())
+                ))
+                smallLabels[3 * x + y].bindtags((miniGrid,) + smallLabels[3 * x + y].bindtags())
 
-                labels[3 * x + y]['font'] = self.smallNumberFont
-                labels[3 * x + y].grid(row=x, column=y)
+                smallLabels[3 * x + y]['font'] = self.smallNumberFont
+                smallLabels[3 * x + y].grid(row=x, column=y)
         return miniGrid
 
     def update(self):
@@ -172,7 +173,7 @@ class SudokuUI:
                             else:
                                 bgcolor = BackgroundColor.DEFAULT
 
-                            fgcolor = [[None for i in range(0, 3)] for j in range(0, 3)]
+                            fgcolor = [['' for i in range(0, 3)] for j in range(0, 3)]
                             for i, j in product(range(0, 3), range(0, 3)):
                                 if self.isShowingTactic and (3*i + j + 1) in self.highlightedEntries[3*x1 + x2][3*y1 + y2]:
                                     fgcolor[i][j] = TextColor.USEFUL
