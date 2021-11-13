@@ -1,22 +1,23 @@
 from itertools import product
 import copy
 import random
-from typing import List
+from typing import List, Union, Set
 
 from tactics.TrivialPenciling import TrivialPenciling
 from tactics.NakedSingle import NakedSingle
 from tactics.HiddenSingle import HiddenSingle
 from tactics.NakedDouble import NakedDouble
 
+
 class SudokuGrid:
-    def __init__(self, initState: List[List]=[[None for i in range(0, 9)] for j in range(0, 9)]):
+    def __init__(self, initState: List[List[Union[None, int, Set[int]]]] = [[None for _ in range(0, 9)] for _ in range(0, 9)]):
         self.tactics = []
         self.tactics.append(TrivialPenciling())
         self.tactics.append(NakedSingle())
         self.tactics.append(HiddenSingle())
         self.tactics.append(NakedDouble())
         self.entries = initState
-        self.isInLargeMode = [[True for i in range(0, 9)] for j in range(0, 9)]
+        self.isInLargeMode = [[True for _ in range(0, 9)] for _ in range(0, 9)]
 
     # Does not check pencil markings
     def isNoDuplicates(self):
@@ -54,18 +55,19 @@ class SudokuGrid:
 
         return True
 
-    def solutions(self, solutionsCutoff: int=10, randomised: bool=False) -> List['SudokuGrid']:
+    def solutions(self, solutionsCutoff: int = 10, randomised: bool = False) -> List['SudokuGrid']:
         currentSudoku = copy.deepcopy(self)
         while True:
             if not currentSudoku.isNoDuplicates():
                 return []
             nextSudoku = currentSudoku.getTactic()[0]
-            if (nextSudoku.isInLargeMode == currentSudoku.isInLargeMode) and (nextSudoku.entries == currentSudoku.entries):
+            if ((nextSudoku.isInLargeMode == currentSudoku.isInLargeMode) and
+                    (nextSudoku.entries == currentSudoku.entries)):
                 break
             currentSudoku = nextSudoku
         return currentSudoku.bruteForce(solutionsCutoff=solutionsCutoff, randomised=randomised)
 
-    def bruteForce(self, solutionsCutoff: int=10, randomised: bool=False) -> List['SudokuGrid']:
+    def bruteForce(self, solutionsCutoff: int = 10, randomised: bool = False) -> List['SudokuGrid']:
         # Find the next cell not filled
         x, y = None, None
         for i, j in product(range(0, 9), range(0, 9)):
@@ -103,7 +105,8 @@ class SudokuGrid:
     def addPenciling(self):
         for i in range(0, 9):
             for j in range(0, 9):
-                if (self.isInLargeMode[i][j] and self.entries[i][j] not in range(1, 10)) or (not self.isInLargeMode[i][j] and len(self.entries[i][j]) == 0):
+                if ((self.isInLargeMode[i][j] and self.entries[i][j] not in range(1, 10)) or
+                        (not self.isInLargeMode[i][j] and len(self.entries[i][j]) == 0)):
                     self.isInLargeMode[i][j] = False
                     self.entries[i][j] = set([n for n in range(1, 10)])
 
