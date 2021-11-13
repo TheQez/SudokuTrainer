@@ -4,6 +4,7 @@ import random
 from tactics.HiddenSingle import HiddenSingle
 from tactics.NakedDouble import NakedDouble
 
+
 def generateSudoku() -> SudokuGrid:
     while True:
         sudoku = SudokuGrid()
@@ -18,11 +19,12 @@ def generateSudoku() -> SudokuGrid:
                 print('Not valid, trying again')
                 break
             tactics = getRequiredTactics(sudoku)[1]
-            if tactics == None:
+            if tactics is None:
                 print('Too hard, trying again')
                 break
             if NakedDouble in tactics:
                 return sudoku
+
 
 def getRequiredTactics(sudoku: SudokuGrid):
     tactics = set()
@@ -31,7 +33,7 @@ def getRequiredTactics(sudoku: SudokuGrid):
         if sudoku.isSolved():
             return sudoku, tactics
         newSudoku, _, _, tactic = sudoku.getTactic()
-        if tactic == None:
+        if tactic is None:
             return None, None
         if tactic not in tactics:
             tactics.add(tactic)

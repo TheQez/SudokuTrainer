@@ -5,8 +5,8 @@ from typing import List, Set
 
 
 class SudokuTactic(ABC):
-
     applyType = tuple[SudokuGrid, List[List[Set]], List[List[Set]]]
+
     @abstractmethod
     def apply(self, sudoku: SudokuGrid) -> applyType:
         pass
@@ -32,8 +32,8 @@ class SudokuTactic(ABC):
     def isInBox(sudoku: SudokuGrid.SudokuGrid, number: int, x: int, y: int) -> bool:
         for i in range(0, 3):
             for j in range(0, 3):
-                if sudoku.isInLargeMode[x-(x%3)+i][y-(y%3)+j]:
-                    if sudoku.entries[x-(x%3)+i][y-(y%3)+j] == number:
+                if sudoku.isInLargeMode[x-(x % 3)+i][y-(y % 3)+j]:
+                    if sudoku.entries[x-(x % 3)+i][y-(y % 3)+j] == number:
                         return True
         return False
 
@@ -59,8 +59,8 @@ class SudokuTactic(ABC):
         count = 0
         for i in range(0, 3):
             for j in range(0, 3):
-                if not sudoku.isInLargeMode[x-(x%3)+i][y-(y%3)+j]:
-                    if number in sudoku.entries[x-(x%3)+i][y-(y%3)+j]:
+                if not sudoku.isInLargeMode[x-(x % 3)+i][y-(y % 3)+j]:
+                    if number in sudoku.entries[x-(x % 3)+i][y-(y % 3)+j]:
                         count += 1
         return count
 

@@ -5,15 +5,18 @@ from itertools import product
 import GenerateSudoku
 from typing import Union, List
 
-class BackgroundColor():
+
+class BackgroundColor:
     DEFAULT = '#FFFFFF'
     LARGESELECTED = '#FFFF00'
     SMALLSELECTED = '#FF00FF'
 
-class TextColor():
+
+class TextColor:
     DEFAULT = '#000000'
     REMOVED = '#FF0000'
     USEFUL = '#00FF00'
+
 
 class SudokuUI:
     selectedCell = (None, None)
@@ -23,7 +26,8 @@ class SudokuUI:
 
     currentMode = 'LARGE'
     isShowingTactic = False
-    def __init__(self, window: tk.Tk, sudoku: SudokuGrid=SudokuGrid()):
+
+    def __init__(self, window: tk.Tk, sudoku: SudokuGrid = SudokuGrid()):
         # TODO: Have a real init function
         self.window = window
         self.pixel = tk.PhotoImage(width=1, height=1)
@@ -75,7 +79,8 @@ class SudokuUI:
         if event.char == "s":
             if not self.isShowingTactic:
                 self.newSudoku, self.highlightedEntries, self.removedEntries, tactic = self.sudoku.getTactic()
-                if (self.newSudoku.isInLargeMode != self.sudoku.isInLargeMode) or (self.newSudoku.entries != self.sudoku.entries):
+                if ((self.newSudoku.isInLargeMode != self.sudoku.isInLargeMode) or
+                        (self.newSudoku.entries != self.sudoku.entries)):
                     print(tactic.__name__)
                     self.isShowingTactic = True
                 else:
@@ -173,11 +178,13 @@ class SudokuUI:
                             else:
                                 bgcolor = BackgroundColor.DEFAULT
 
-                            fgcolor = [['' for i in range(0, 3)] for j in range(0, 3)]
+                            fgcolor = [['' for _ in range(0, 3)] for _ in range(0, 3)]
                             for i, j in product(range(0, 3), range(0, 3)):
-                                if self.isShowingTactic and (3*i + j + 1) in self.highlightedEntries[3*x1 + x2][3*y1 + y2]:
+                                if (self.isShowingTactic and
+                                        (3*i + j + 1) in self.highlightedEntries[3*x1 + x2][3*y1 + y2]):
                                     fgcolor[i][j] = TextColor.USEFUL
-                                elif self.isShowingTactic and (3*i + j + 1) in self.removedEntries[3*x1 + x2][3*y1 + y2]:
+                                elif (self.isShowingTactic and
+                                        (3*i + j + 1) in self.removedEntries[3*x1 + x2][3*y1 + y2]):
                                     fgcolor[i][j] = TextColor.REMOVED
                                 else:
                                     fgcolor[i][j] = TextColor.DEFAULT

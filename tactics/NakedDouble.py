@@ -2,17 +2,19 @@ from tactics.SudokuTactic import SudokuTactic
 from copy import deepcopy
 from itertools import product
 
+
 class NakedDouble(SudokuTactic):
     def apply(self, sudoku):
         newSudoku = deepcopy(sudoku)
-        highlightedEntries = [[set() for i in range(0, 9)] for j in range(0, 9)]
-        removedEntries = [[set() for i in range(0, 9)] for j in range(0, 9)]
+        highlightedEntries = [[set() for _ in range(0, 9)] for _ in range(0, 9)]
+        removedEntries = [[set() for _ in range(0, 9)] for _ in range(0, 9)]
 
         for x1, y1, x2, y2 in product(range(0, 9), range(0, 9), range(0, 9), range(0, 9)):
             if NakedDouble.isTacticViable(sudoku, x1, y1, x2, y2):
                 tacticWorked = False
                 elements = list(sudoku.entries[x1][y1])
-                if x1 == x2 and ((SudokuTactic.numInRow(sudoku, elements[0], x1) > 2) or (SudokuTactic.numInRow(sudoku, elements[1], x1) > 2)):
+                if (x1 == x2 and ((SudokuTactic.numInRow(sudoku, elements[0], x1) > 2) or
+                                  (SudokuTactic.numInRow(sudoku, elements[1], x1) > 2))):
                     tacticWorked = True
                     for i in range(0, 9):
                         if not sudoku.isInLargeMode[x1][i] and i != y1 and i != y2:
@@ -23,7 +25,8 @@ class NakedDouble(SudokuTactic):
                                 newSudoku.entries[x1][i].remove(elements[1])
                                 removedEntries[x1][i].add(elements[1])
 
-                if y1 == y2 and ((SudokuTactic.numInColumn(sudoku, elements[0], y1) > 2) or (SudokuTactic.numInColumn(sudoku, elements[1], y1) > 2)):
+                if (y1 == y2 and ((SudokuTactic.numInColumn(sudoku, elements[0], y1) > 2) or
+                                  (SudokuTactic.numInColumn(sudoku, elements[1], y1) > 2))):
                     tacticWorked = True
                     for i in range(0, 9):
                         if not sudoku.isInLargeMode[i][y1] and i != x1 and i != x2:
@@ -35,7 +38,8 @@ class NakedDouble(SudokuTactic):
                                 removedEntries[i][y1].add(elements[1])
 
                 if (x1 // 3 == x2 // 3) and (y1 // 3 == y2 // 3):
-                    if (SudokuTactic.numInBox(sudoku, elements[0], x1, y1) > 2) or (SudokuTactic.numInBox(sudoku, elements[1], x1, y1) > 2):
+                    if ((SudokuTactic.numInBox(sudoku, elements[0], x1, y1) > 2) or
+                            (SudokuTactic.numInBox(sudoku, elements[1], x1, y1) > 2)):
                         tacticWorked = True
                         for i, j in product(range(0, 3), range(0, 3)):
                             x = (x1 // 3)*3 + i
@@ -48,7 +52,7 @@ class NakedDouble(SudokuTactic):
                                     newSudoku.entries[x][y].remove(elements[1])
                                     removedEntries[x][y].add(elements[1])
 
-                if tacticWorked == True:
+                if tacticWorked:
                     highlightedEntries[x1][y1].add(elements[0])
                     highlightedEntries[x1][y1].add(elements[1])
                     highlightedEntries[x2][y2].add(elements[0])
@@ -56,14 +60,12 @@ class NakedDouble(SudokuTactic):
                     return newSudoku, highlightedEntries, removedEntries
         return sudoku, highlightedEntries, removedEntries
 
-
     @staticmethod
     def isTacticViable(sudoku, x1, y1, x2, y2):
         if (x1 != x2) or (y1 != y2):
             if SudokuTactic.isConnected(x1, y1, x2, y2):
                 if not sudoku.isInLargeMode[x1][y1] and not sudoku.isInLargeMode[x2][y2]:
-                    if len(sudoku.entries[x1][y1]) == 2 and len(sudoku.entries[x1][y1]) == 2 and set(sudoku.entries[x1][y1]) == set(sudoku.entries[x2][y2]):
+                    if (len(sudoku.entries[x1][y1]) == 2 and len(sudoku.entries[x2][y2]) == 2 and
+                            set(sudoku.entries[x1][y1]) == set(sudoku.entries[x2][y2])):
                         return True
         return False
-
-
