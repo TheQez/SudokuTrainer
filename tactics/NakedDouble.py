@@ -57,8 +57,8 @@ class NakedDouble(SudokuTactic):
                     highlightedEntries[x1][y1].add(elements[1])
                     highlightedEntries[x2][y2].add(elements[0])
                     highlightedEntries[x2][y2].add(elements[1])
-                    return newSudoku, highlightedEntries, removedEntries
-        return sudoku, highlightedEntries, removedEntries
+                    return newSudoku, highlightedEntries, removedEntries, 'test'
+        return sudoku, highlightedEntries, removedEntries, 'test'
 
     @staticmethod
     def isTacticViable(sudoku, x1, y1, x2, y2):

@@ -14,4 +14,4 @@ class NakedSingle(SudokuTactic):
                     (element, ) = sudoku.entries[i][j]
                     newSudoku.entries[i][j] = element
                     highlightedEntries[i][j].add(element)
-        return newSudoku, highlightedEntries, removedEntries
+        return newSudoku, highlightedEntries, removedEntries, 'test'

@@ -16,4 +16,4 @@ class TrivialPenciling(SudokuTactic):
                                 SudokuTactic.isInBox(sudoku, num, i, j)):
                             newSudoku.entries[i][j].remove(num)
                             removedEntries[i][j].add(num)
-        return newSudoku, highlightedEntries, removedEntries
+        return newSudoku, highlightedEntries, removedEntries, 'test'

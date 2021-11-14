@@ -5,7 +5,7 @@ from typing import List, Set
 
 
 class SudokuTactic(ABC):
-    applyType = tuple[SudokuGrid, List[List[Set]], List[List[Set]]]
+    applyType = tuple[SudokuGrid, List[List[Set]], List[List[Set]], str]
 
     @abstractmethod
     def apply(self, sudoku: SudokuGrid) -> applyType:

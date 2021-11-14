@@ -18,4 +18,4 @@ class HiddenSingle(SudokuTactic):
                             newSudoku.entries[i][j] = num
                             highlightedEntries[i][j].add(num)
                             break
-        return newSudoku, highlightedEntries, removedEntries
+        return newSudoku, highlightedEntries, removedEntries, 'test'

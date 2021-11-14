@@ -32,7 +32,7 @@ def getRequiredTactics(sudoku: SudokuGrid):
     while True:
         if sudoku.isSolved():
             return sudoku, tactics
-        newSudoku, _, _, tactic = sudoku.getTactic()
+        newSudoku, _, _, _, tactic = sudoku.getTactic()
         if tactic is None:
             return None, None
         if tactic not in tactics:
