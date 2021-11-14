@@ -73,10 +73,12 @@ class SudokuUI:
                 self.currentMode = 'LARGE'
 
         if event.char == '0':
+            self.textbar.changeText('Attempting to solve sudoku...')
             sols = self.sudoku.solutions(solutionsCutoff=10, randomised=True)
             print(len(sols))
             if len(sols) != 0:
                 self.sudoku = sols[0]
+            self.textbar.changeText('Sudoku solved')
 
         if event.char == "s":
             if not self.isShowingTactic:
@@ -84,9 +86,11 @@ class SudokuUI:
                 if ((self.newSudoku.isInLargeMode != self.sudoku.isInLargeMode) or
                         (self.newSudoku.entries != self.sudoku.entries)):
                     print(tactic.__name__)
+                    self.textbar.changeText(tactic.__name__ + ' applied')
                     self.isShowingTactic = True
                 else:
                     print('Failed to apply any tactic')
+                    self.textbar.changeText('Failed to apply any tactic')
             else:
                 self.isShowingTactic = False
                 self.sudoku = self.newSudoku
@@ -95,10 +99,9 @@ class SudokuUI:
             print(self.sudoku.isValid())
 
         if event.char == "f":
+            self.textbar.changeText('Attempting to generate sudoku...')
             self.sudoku = GenerateSudoku.generateSudoku()
-
-        if event.char == "t":
-            self.textbar.changeText('test')
+            self.textbar.changeText('Sudoku generated')
 
         self.update()
 
