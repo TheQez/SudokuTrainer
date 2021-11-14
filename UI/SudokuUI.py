@@ -4,6 +4,7 @@ import tkinter.font as font
 from itertools import product
 import GenerateSudoku
 from typing import Union, List
+from UI.TextBarUI import TextBarUI as TextBarUI
 
 
 class BackgroundColor:
@@ -27,13 +28,14 @@ class SudokuUI:
     currentMode = 'LARGE'
     isShowingTactic = False
 
-    def __init__(self, window: tk.Tk, sudoku: SudokuGrid = SudokuGrid()):
+    def __init__(self, window: tk.Tk, textbar: TextBarUI, sudoku: SudokuGrid = SudokuGrid()):
         # TODO: Have a real init function
         self.window = window
         self.pixel = tk.PhotoImage(width=1, height=1)
         self.sudoku = sudoku
+        self.textbar = textbar
 
-        window.bind('<KeyPress>', self.onKeyPress)
+        #window.bind('<KeyPress>', self.onKeyPress)
 
         self.mainNumberFont = font.Font(size='30')
         self.smallNumberFont = font.Font(size='10')
@@ -94,6 +96,9 @@ class SudokuUI:
 
         if event.char == "f":
             self.sudoku = GenerateSudoku.generateSudoku()
+
+        if event.char == "t":
+            self.textbar.changeText('test')
 
         self.update()
 
