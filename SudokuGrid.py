@@ -113,11 +113,11 @@ class SudokuGrid:
     def getTactic(self):
         self.addPenciling()
         for tactic in self.tactics:
-            newSudoku, highlightedEntries, removedEntries = tactic.apply(self)
+            newSudoku, highlightedEntries, removedEntries, tacticExplanation = tactic.apply(self)
             if newSudoku.entries != self.entries:
                 #print(tactic.__class__.__name__)
-                return newSudoku, highlightedEntries, removedEntries, tactic.__class__
-        return self, set(), set(), None
+                return newSudoku, highlightedEntries, removedEntries, tacticExplanation, tactic.__class__
+        return self, set(), set(), '', None
 
     def isValid(self):
         sols = self.solutions()

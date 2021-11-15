@@ -18,4 +18,5 @@ class HiddenSingle(SudokuTactic):
                             newSudoku.entries[i][j] = num
                             highlightedEntries[i][j].add(num)
                             break
-        return newSudoku, highlightedEntries, removedEntries
+        explanation = 'Filled in all cells where only a single copy of a number appears in a row, column or box.'
+        return newSudoku, highlightedEntries, removedEntries, explanation
