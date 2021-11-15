@@ -96,7 +96,12 @@ class SudokuUI:
                 self.sudoku = self.newSudoku
 
         if event.char == "v":
-            print(self.sudoku.isValid())
+            valid = self.sudoku.isValid()
+            print(valid)
+            if valid:
+                self.textbar.changeText('Sudoku is valid')
+            else:
+                self.textbar.changeText('Sudoku is not valid')
 
         if event.char == "f":
             self.textbar.changeText('Attempting to generate sudoku...')
