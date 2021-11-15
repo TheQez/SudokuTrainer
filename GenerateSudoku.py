@@ -22,7 +22,7 @@ def generateSudoku() -> SudokuGrid:
             if tactics is None:
                 print('Too hard, trying again')
                 break
-            if HiddenSingle in tactics:
+            if NakedDouble in tactics:
                 return sudoku
 
 

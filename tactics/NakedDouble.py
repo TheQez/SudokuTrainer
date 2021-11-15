@@ -57,8 +57,12 @@ class NakedDouble(SudokuTactic):
                     highlightedEntries[x1][y1].add(elements[1])
                     highlightedEntries[x2][y2].add(elements[0])
                     highlightedEntries[x2][y2].add(elements[1])
-                    return newSudoku, highlightedEntries, removedEntries, 'test'
-        return sudoku, highlightedEntries, removedEntries, 'test'
+                    explanation = 'Cells (' + str(x1) + ', ' + str(y1) + ') and (' + str(x2) + ', ' + str(y2) + ') '
+                    explanation += 'both contain only ' + str(elements[0]) + ' and ' + str(elements[1]) + ' and see each other'
+                    explanation += ', so any ' + str(elements[0]) + ' or ' + str(elements[1])
+                    explanation += ' entries sharing a row, column or box with both can be removed.'
+                    return newSudoku, highlightedEntries, removedEntries, explanation
+        return sudoku, highlightedEntries, removedEntries, ''
 
     @staticmethod
     def isTacticViable(sudoku, x1, y1, x2, y2):

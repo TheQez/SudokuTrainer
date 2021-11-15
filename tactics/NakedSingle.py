@@ -14,4 +14,5 @@ class NakedSingle(SudokuTactic):
                     (element, ) = sudoku.entries[i][j]
                     newSudoku.entries[i][j] = element
                     highlightedEntries[i][j].add(element)
-        return newSudoku, highlightedEntries, removedEntries, 'test'
+        explanation = 'Filled in all cells with only a single penciled number.'
+        return newSudoku, highlightedEntries, removedEntries, explanation
