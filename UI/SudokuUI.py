@@ -38,7 +38,6 @@ class SudokuUI:
         self.visualiser = visualiser
 
         self.tacticList = [tactics.TrivialPenciling.TrivialPenciling, tactics.NakedSingle.NakedSingle, tactics.HiddenSingle.HiddenSingle, tactics.NakedDouble.NakedDouble]
-
         self.visualiser.tactics = self.tacticList
         self.visualiser.update()
 
@@ -92,11 +91,14 @@ class SudokuUI:
                         (self.newSudoku.entries != self.sudoku.entries)):
                     print(tactic.__name__)
                     self.isShowingTactic = True
+                    self.visualiser.activeTactic = tactic
                 else:
                     print('Failed to apply any tactic')
             else:
                 self.isShowingTactic = False
+                self.visualiser.activeTactic = None
                 self.sudoku = self.newSudoku
+            self.visualiser.update()
 
         if event.char == "v":
             print(self.sudoku.isValid())
