@@ -15,8 +15,8 @@ if __name__ == '__main__':
     visualiserFrame = tk.Frame(master=window)
 
     textbar = TextBarUI(textbarFrame)
-    sudoku = SudokuUI(sudokuFrame, textbar)
     visualiser = TacticVisualiserUI(visualiserFrame)
+    sudoku = SudokuUI(sudokuFrame, textbar, visualiser)
 
     window.bind('<KeyPress>', sudoku.onKeyPress)
 

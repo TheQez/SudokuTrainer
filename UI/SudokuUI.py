@@ -5,7 +5,8 @@ from itertools import product
 import GenerateSudoku
 from typing import Union, List
 from UI.TextBarUI import TextBarUI as TextBarUI
-
+from UI.TacticVisualiserUI import TacticVisualiserUI as TacticVisualiserUI
+import tactics
 
 class BackgroundColor:
     DEFAULT = '#FFFFFF'
@@ -28,12 +29,18 @@ class SudokuUI:
     currentMode = 'LARGE'
     isShowingTactic = False
 
-    def __init__(self, window: tk.Tk, textbar: TextBarUI, sudoku: SudokuGrid = SudokuGrid()):
+    def __init__(self, window: tk.Tk, textbar: TextBarUI, visualiser: TacticVisualiserUI, sudoku: SudokuGrid = SudokuGrid()):
         # TODO: Have a real init function
         self.window = window
         self.pixel = tk.PhotoImage(width=1, height=1)
         self.sudoku = sudoku
         self.textbar = textbar
+        self.visualiser = visualiser
+
+        self.tacticList = [tactics.TrivialPenciling.TrivialPenciling, tactics.NakedSingle.NakedSingle, tactics.HiddenSingle.HiddenSingle, tactics.NakedDouble.NakedDouble]
+
+        self.visualiser.tactics = self.tacticList
+        self.visualiser.update()
 
         #window.bind('<KeyPress>', self.onKeyPress)
 
