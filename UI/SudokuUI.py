@@ -115,7 +115,7 @@ class SudokuUI:
 
         if event.char == "f":
             self.textbar.changeText('Attempting to generate sudoku...')
-            self.sudoku = GenerateSudoku.generateSudoku()
+            self.sudoku = GenerateSudoku.generateSudoku(self.sudoku.tactics)
             self.textbar.changeText('Sudoku generated')
 
         self.update()

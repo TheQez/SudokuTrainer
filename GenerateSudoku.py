@@ -5,10 +5,11 @@ from tactics.HiddenSingle import HiddenSingle
 from tactics.NakedDouble import NakedDouble
 
 
-def generateSudoku() -> SudokuGrid:
+def generateSudoku(tactics) -> SudokuGrid:
     while True:
         sudoku = SudokuGrid()
         sudoku = sudoku.bruteForce(solutionsCutoff=1, randomised=True)[0]
+        sudoku.tactics = tactics
         while True:
             x = random.randint(0, 8)
             y = random.randint(0, 8)
@@ -18,11 +19,11 @@ def generateSudoku() -> SudokuGrid:
             if not len(sudoku.solutions(solutionsCutoff=2)) == 1:
                 print('Not valid, trying again')
                 break
-            tactics = getRequiredTactics(sudoku)[1]
-            if tactics is None:
+            usedTactics = getRequiredTactics(sudoku)[1]
+            if usedTactics is None:
                 print('Too hard, trying again')
                 break
-            if HiddenSingle in [tactic.__class__ for tactic in tactics]:
+            if tactics[-1].__class__ in [tactic.__class__ for tactic in usedTactics]:
                 return sudoku
 
 
