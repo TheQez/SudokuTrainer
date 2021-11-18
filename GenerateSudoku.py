@@ -22,7 +22,7 @@ def generateSudoku() -> SudokuGrid:
             if tactics is None:
                 print('Too hard, trying again')
                 break
-            if HiddenSingle in tactics:
+            if HiddenSingle in [tactic.__class__ for tactic in tactics]:
                 return sudoku
 
 

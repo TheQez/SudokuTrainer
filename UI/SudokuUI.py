@@ -5,7 +5,8 @@ from itertools import product
 import GenerateSudoku
 from typing import Union, List
 from UI.TextBarUI import TextBarUI as TextBarUI
-
+from UI.TacticVisualiserUI import TacticVisualiserUI as TacticVisualiserUI
+import tactics
 
 class BackgroundColor:
     DEFAULT = '#FFFFFF'
@@ -28,12 +29,16 @@ class SudokuUI:
     currentMode = 'LARGE'
     isShowingTactic = False
 
-    def __init__(self, window: tk.Tk, textbar: TextBarUI, sudoku: SudokuGrid = SudokuGrid()):
+    def __init__(self, window: tk.Tk, textbar: TextBarUI, visualiser: TacticVisualiserUI, sudoku: SudokuGrid = SudokuGrid()):
         # TODO: Have a real init function
         self.window = window
         self.pixel = tk.PhotoImage(width=1, height=1)
         self.sudoku = sudoku
         self.textbar = textbar
+        self.visualiser = visualiser
+
+        self.visualiser.tactics = [tactics.TrivialPenciling.TrivialPenciling(), tactics.NakedSingle.NakedSingle(), tactics.HiddenSingle.HiddenSingle(), tactics.NakedDouble.NakedDouble()]
+        self.visualiser.update()
 
         #window.bind('<KeyPress>', self.onKeyPress)
 
@@ -81,19 +86,23 @@ class SudokuUI:
             self.textbar.changeText('Sudoku solved')
 
         if event.char == "s":
+            self.sudoku.tactics = self.visualiser.tactics
             if not self.isShowingTactic:
                 self.newSudoku, self.highlightedEntries, self.removedEntries, tacticExplanation, tactic = self.sudoku.getTactic()
                 if ((self.newSudoku.isInLargeMode != self.sudoku.isInLargeMode) or
                         (self.newSudoku.entries != self.sudoku.entries)):
-                    print(tactic.__name__)
-                    self.textbar.changeText(tactic.__name__ + ' applied\n\n' + tacticExplanation)
+                    print(tactic.__class__.__name__)
+                    self.textbar.changeText(tactic.__class__.__name__ + ' applied\n\n' + tacticExplanation)
                     self.isShowingTactic = True
+                    self.visualiser.activeTactic = tactic
                 else:
                     print('Failed to apply any tactic')
                     self.textbar.changeText('Failed to apply any tactic')
             else:
                 self.isShowingTactic = False
+                self.visualiser.activeTactic = None
                 self.sudoku = self.newSudoku
+            self.visualiser.update()
 
         if event.char == "v":
             valid = self.sudoku.isValid()

@@ -116,7 +116,7 @@ class SudokuGrid:
             newSudoku, highlightedEntries, removedEntries, tacticExplanation = tactic.apply(self)
             if newSudoku.entries != self.entries:
                 #print(tactic.__class__.__name__)
-                return newSudoku, highlightedEntries, removedEntries, tacticExplanation, tactic.__class__
+                return newSudoku, highlightedEntries, removedEntries, tacticExplanation, tactic
         return self, set(), set(), '', None
 
     def isValid(self):
