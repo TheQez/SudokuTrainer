@@ -1,4 +1,4 @@
-# sudoku
+# SudokuTrainer
 
 A sudoku client designed to teach tactics visually.
 
