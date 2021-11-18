@@ -37,7 +37,7 @@ class SudokuUI:
         self.textbar = textbar
         self.visualiser = visualiser
 
-        self.visualiser.tactics = [tactics.TrivialPenciling.TrivialPenciling(), tactics.NakedSingle.NakedSingle(), tactics.HiddenSingle.HiddenSingle(), tactics.NakedDouble.NakedDouble()]
+        self.visualiser.activeTactics = [tactics.TrivialPenciling.TrivialPenciling(), tactics.NakedSingle.NakedSingle(), tactics.HiddenSingle.HiddenSingle(), tactics.NakedDouble.NakedDouble()]
         self.visualiser.update()
 
         #window.bind('<KeyPress>', self.onKeyPress)
@@ -55,6 +55,8 @@ class SudokuUI:
         self.update()
 
     def onKeyPress(self, event: tk.EventType.KeyPress):
+        self.sudoku.tactics = self.visualiser.activeTactics
+
         if event.char.isdigit() and event.char != '0':
             if self.currentMode == 'LARGE':
                 self.sudoku.isInLargeMode[self.selectedCell[0]][self.selectedCell[1]] = True
@@ -86,7 +88,6 @@ class SudokuUI:
             self.textbar.changeText('Sudoku solved')
 
         if event.char == "s":
-            self.sudoku.tactics = self.visualiser.tactics
             if not self.isShowingTactic:
                 self.newSudoku, self.highlightedEntries, self.removedEntries, tacticExplanation, tactic = self.sudoku.getTactic()
                 if ((self.newSudoku.isInLargeMode != self.sudoku.isInLargeMode) or
@@ -94,13 +95,13 @@ class SudokuUI:
                     print(tactic.__class__.__name__)
                     self.textbar.changeText(tactic.__class__.__name__ + ' applied\n\n' + tacticExplanation)
                     self.isShowingTactic = True
-                    self.visualiser.activeTactic = tactic
+                    self.visualiser.highlightedTactic = tactic
                 else:
                     print('Failed to apply any tactic')
                     self.textbar.changeText('Failed to apply any tactic')
             else:
                 self.isShowingTactic = False
-                self.visualiser.activeTactic = None
+                self.visualiser.highlightedTactic = None
                 self.sudoku = self.newSudoku
             self.visualiser.update()
 
