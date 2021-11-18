@@ -78,22 +78,26 @@ class SudokuUI:
                 self.currentMode = 'LARGE'
 
         if event.char == '0':
+            self.textbar.changeText('Attempting to solve sudoku...')
             sols = self.sudoku.solutions(solutionsCutoff=10, randomised=True)
             print(len(sols))
             if len(sols) != 0:
                 self.sudoku = sols[0]
+            self.textbar.changeText('Sudoku solved')
 
         if event.char == "s":
             self.sudoku.tactics = self.visualiser.tactics
             if not self.isShowingTactic:
-                self.newSudoku, self.highlightedEntries, self.removedEntries, tactic = self.sudoku.getTactic()
+                self.newSudoku, self.highlightedEntries, self.removedEntries, tacticExplanation, tactic = self.sudoku.getTactic()
                 if ((self.newSudoku.isInLargeMode != self.sudoku.isInLargeMode) or
                         (self.newSudoku.entries != self.sudoku.entries)):
                     print(tactic.__class__.__name__)
+                    self.textbar.changeText(tactic.__class__.__name__ + ' applied\n\n' + tacticExplanation)
                     self.isShowingTactic = True
                     self.visualiser.activeTactic = tactic
                 else:
                     print('Failed to apply any tactic')
+                    self.textbar.changeText('Failed to apply any tactic')
             else:
                 self.isShowingTactic = False
                 self.visualiser.activeTactic = None
@@ -101,13 +105,17 @@ class SudokuUI:
             self.visualiser.update()
 
         if event.char == "v":
-            print(self.sudoku.isValid())
+            valid = self.sudoku.isValid()
+            print(valid)
+            if valid:
+                self.textbar.changeText('Sudoku is valid')
+            else:
+                self.textbar.changeText('Sudoku is not valid')
 
         if event.char == "f":
+            self.textbar.changeText('Attempting to generate sudoku...')
             self.sudoku = GenerateSudoku.generateSudoku()
-
-        if event.char == "t":
-            self.textbar.changeText('test')
+            self.textbar.changeText('Sudoku generated')
 
         self.update()
 

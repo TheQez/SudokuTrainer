@@ -16,4 +16,5 @@ class TrivialPenciling(SudokuTactic):
                                 SudokuTactic.isInBox(sudoku, num, i, j)):
                             newSudoku.entries[i][j].remove(num)
                             removedEntries[i][j].add(num)
-        return newSudoku, highlightedEntries, removedEntries
+        explanation = 'Removed all pencilling that shared a box, column or row with the same numbered entry.'
+        return newSudoku, highlightedEntries, removedEntries, explanation
