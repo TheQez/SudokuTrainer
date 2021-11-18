@@ -37,8 +37,7 @@ class SudokuUI:
         self.textbar = textbar
         self.visualiser = visualiser
 
-        self.tacticList = [tactics.TrivialPenciling.TrivialPenciling, tactics.NakedSingle.NakedSingle, tactics.HiddenSingle.HiddenSingle, tactics.NakedDouble.NakedDouble]
-        self.visualiser.tactics = self.tacticList
+        self.visualiser.tactics = [tactics.TrivialPenciling.TrivialPenciling(), tactics.NakedSingle.NakedSingle(), tactics.HiddenSingle.HiddenSingle(), tactics.NakedDouble.NakedDouble()]
         self.visualiser.update()
 
         #window.bind('<KeyPress>', self.onKeyPress)
@@ -85,11 +84,12 @@ class SudokuUI:
                 self.sudoku = sols[0]
 
         if event.char == "s":
+            self.sudoku.tactics = self.visualiser.tactics
             if not self.isShowingTactic:
                 self.newSudoku, self.highlightedEntries, self.removedEntries, tactic = self.sudoku.getTactic()
                 if ((self.newSudoku.isInLargeMode != self.sudoku.isInLargeMode) or
                         (self.newSudoku.entries != self.sudoku.entries)):
-                    print(tactic.__name__)
+                    print(tactic.__class__.__name__)
                     self.isShowingTactic = True
                     self.visualiser.activeTactic = tactic
                 else:
